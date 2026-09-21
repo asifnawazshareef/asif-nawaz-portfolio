@@ -23,6 +23,10 @@ export async function portfolioData() {
       sql`SELECT id, name, summary, url, category, technologies FROM projects WHERE featured = true ORDER BY sort_order ASC, created_at DESC`,
       sql`SELECT id, company, role, location, start_date::text, end_date::text, is_current, description FROM experiences ORDER BY sort_order ASC, start_date DESC`,
     ]);
-    return { profile: (profiles[0] as Profile | undefined) ?? fallbackProfile, projects: projects as Project[], experience: experience as Experience[] };
+    return {
+      profile: (profiles[0] as Profile | undefined) ?? fallbackProfile,
+      projects: (projects as Project[]).length ? projects as Project[] : fallbackProjects,
+      experience: (experience as Experience[]).length ? experience as Experience[] : fallbackExperience,
+    };
   } catch { return { profile: fallbackProfile, projects: fallbackProjects, experience: fallbackExperience }; }
 }
